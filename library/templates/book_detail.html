@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <img src="{{ book.cover_image.url }}" alt="Book Cover" style="max-width: 100%;">
+    </div>
+    <div class="col-md-8">
+        <h3>{{ book.title }}</h3>
+        <p><strong>Author:</strong> {{ book.author }}</p>
+        <p><strong>Published:</strong> {{ book.publication_date|date:"j F Y" }}</p>
+        <p><strong>Category:</strong> {{ book.category }}</p>
+        <p><strong>Status:</strong> {{ book.get_status_display }}</p>
+        <p><strong>Score:</strong> {{ book.score }}</p>
+        <p class="book-description" data-full-description="{{ book.description|escapejs }}"><strong>Deskrispi:</strong>
+            {{ book.description|slice:":300" }}...
+            <a href="#" class="toggle-description">Selengkapnya</a>
+        <p><a href="{% url 'book_update' book.pk %}" class="btn btn-outline-primary">Edit</a>
+        <a href="{% url 'book_delete' book.pk %}" class="btn btn-outline-danger">Delete</a>
+        {% if book.pdf_file %}
+            <a href="{% url 'pdf_preview' book.pk %}" class="btn btn-outline-secondary">Preview PDF</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.toggle-description');
+
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const descriptionElement = this.parentNode;
+                const fullDescription = descriptionElement.getAttribute('data-full-description');
+
+                if (this.textContent === 'Selengkapnya') {
+                    descriptionElement.textContent = fullDescription;
+                    this.textContent = 'Sembunyikan';
+                } else {
+                    descriptionElement.innerHTML = `${fullDescription.slice(0, 300)}... <a href="#" class="toggle-description">Selengkapnya</a>`;
+                }
+            });
+        });
+    });
+</script>

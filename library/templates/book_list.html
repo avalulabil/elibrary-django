@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Buku{% endblock %}
+{% load static %}
+
+{% block content %}
+<form method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="Search" aria-label="Search" value="{{ query }}">
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Year</th>
+            <th>Score</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+                <img src="{{ book.cover_image.url }}" alt="Book Cover" style="width: 30px; height: 30px;">
+                <a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a>
+            </td>
+            <td>{{ book.author }}</td>
+            <td>
+                <span class="badge {% if book.status == 'Completed' %}bg-success{% elif book.status == 'Reading' %}bg-warning{% endif %}">
+                    {{ book.get_status_display }}
+                </span>
+            </td>
+            <td>{{ book.publication_date|date:"M Y" }}</td>
+            <td>{{ book.score }}</td>
+            <td>
+                <a href="{% url 'book_update' book.pk %}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                <a href="{% url 'book_delete' book.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% for page_num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_num == page_obj.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ page_num }}{{ query_params }}">{{ page_num }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock %}

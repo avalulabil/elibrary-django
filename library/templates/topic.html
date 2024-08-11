@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Topic Modeling{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Topic Modeling Results</h1>
+    <hr>
+    {% if topics %}
+        <div class="list-group">
+            {% for topic in topics %}
+                <div class="list-group-item">
+                    <h5>Topic {{ forloop.counter }}:</h5>
+                    <p>{{ topic }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No topics available.</p>
+    {% endif %}
+    <a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+</div>
+{% endblock %}
