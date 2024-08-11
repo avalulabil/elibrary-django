@@ -14,6 +14,9 @@
 - Add New Book
 - CRUD Book
 - Topic Modelling
+- search book
+- book detail
+- katalog
 
 
 ## Run Locally
